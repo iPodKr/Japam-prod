@@ -30,11 +30,11 @@ async function up() {
     await prisma.brand.createMany({
         data: brands
     })
-    await prisma.product.createMany({
-        data: products
-    })
     await prisma.typeProduct.createMany({
         data: typeProducts
+    })
+    await prisma.product.createMany({
+        data: products
     })
     await prisma.cart.createMany({
         data: [
