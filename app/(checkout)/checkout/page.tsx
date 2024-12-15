@@ -19,6 +19,7 @@ import toast from "react-hot-toast"
 import React from "react"
 import { useSession } from "next-auth/react"
 import { Api } from "@/shared/services/apiClient"
+import { Suspense } from "react"
 
 export default function CheckoutPage() {
     const [submitting, setSubmitting] = React.useState(false);
@@ -83,50 +84,52 @@ export default function CheckoutPage() {
     return (
         <Container className="mt-10">
             <Title text='Оформление заказа' className="font-extrabold mb-8 text-[36px]" />
-            <FormProvider {...form} >
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <div className="flex gap-10">
+            <Suspense>
+                <FormProvider {...form} >
+                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                        <div className="flex gap-10">
 
-                        {/*Левая часть*/}
-                        <div className="flex flex-col gap-10 flex-1 mb-20">
-                            <CheckoutCart
-                                onClickCountButton={onClickCountButton}
-                                removeCartItem={removeCartItem}
-                                items={items}
-                                loading={loading}
-                            />
+                            {/*Левая часть*/}
+                            <div className="flex flex-col gap-10 flex-1 mb-20">
+                                <CheckoutCart
+                                    onClickCountButton={onClickCountButton}
+                                    removeCartItem={removeCartItem}
+                                    items={items}
+                                    loading={loading}
+                                />
 
-                            <CheckoutPersonalForm className={loading ? "opacity-40 pointer-events-none" : ""} />
+                                <CheckoutPersonalForm className={loading ? "opacity-40 pointer-events-none" : ""} />
 
-                            <CheckoutAddressForm className={loading ? "opacity-40 pointer-events-none" : ""} />
+                                <CheckoutAddressForm className={loading ? "opacity-40 pointer-events-none" : ""} />
+                            </div>
+
+                            {/*Правая часть*/}
+                            <div className="w-[450px]">
+                                <WhiteBlock
+                                    className="p-6 sticky top-4"
+                                >
+                                    <div className="flex flex-col gap-1">
+                                        <span className="text-xl">Итого</span>
+                                        {loading ?
+                                            (<Skeleton className=" h-11 w-48" />)
+                                            :
+                                            (<span className="h-11 text-[34px] font-extrabold">{totalAmount} ₽</span>)
+                                        }
+                                    </div>
+
+                                    <Button
+                                        loading={loading || submitting}
+                                        type="submit"
+                                        className="w-full h-14 rounded-2xl mt-20 text-base font-bold">
+                                        Оформить заказ
+                                        <ArrowRight className="w-5 ml-2" />
+                                    </Button>
+                                </WhiteBlock>
+                            </div>
                         </div>
-
-                        {/*Правая часть*/}
-                        <div className="w-[450px]">
-                            <WhiteBlock
-                                className="p-6 sticky top-4"
-                            >
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-xl">Итого</span>
-                                    {loading ?
-                                        (<Skeleton className=" h-11 w-48" />)
-                                        :
-                                        (<span className="h-11 text-[34px] font-extrabold">{totalAmount} ₽</span>)
-                                    }
-                                </div>
-
-                                <Button
-                                    loading={loading || submitting}
-                                    type="submit"
-                                    className="w-full h-14 rounded-2xl mt-20 text-base font-bold">
-                                    Оформить заказ
-                                    <ArrowRight className="w-5 ml-2" />
-                                </Button>
-                            </WhiteBlock>
-                        </div>
-                    </div>
-                </form>
-            </FormProvider>
+                    </form>
+                </FormProvider>
+            </Suspense>
         </Container>
     )
 }
