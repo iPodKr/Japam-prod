@@ -84,7 +84,7 @@ export default function CheckoutPage() {
     return (
         <Container className="mt-10">
             <Title text='Оформление заказа' className="font-extrabold mb-8 text-[36px]" />
-            <Suspense>
+            <Suspense fallback={<div>Loading...</div>}>
                 <FormProvider {...form} >
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <div className="flex gap-10">
